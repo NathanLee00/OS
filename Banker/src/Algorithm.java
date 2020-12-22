@@ -11,11 +11,12 @@ public class Algorithm {
     int[] allocPlusAvail;//相当于work+allocation
     int[] completed_process;  //完成的进程标志向量
     int[] unsafe; //不安全向量
-    int[] request;  //需求矩阵
-
+    int[] request;  //需求向量
+    int rpm; //指定需求向量为第几个进程
 
     public void run(){
         init();
+        banker();
     }
 
     public void init(){  //处理数据输入和初始化的方法
@@ -65,7 +66,13 @@ public class Algorithm {
     }
 
     public void banker(){
-
+        System.out.println("请输入要请求资源的进程");
+        Scanner sc = new Scanner(System.in);
+        rpm = sc.nextInt();
+        System.out.println("请输入请求向量");
+        for(r=0;r<column;r++)
+            request[r]=sc.nextInt();
+        System.out.println("以下是输出的矩阵");
     }
 
 }
