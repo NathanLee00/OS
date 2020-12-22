@@ -1,3 +1,5 @@
+import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Algorithm {
@@ -28,6 +30,7 @@ public class Algorithm {
         max = new int [row][column];
         need = new int[row][column];
         available = new int[column];
+        request = new int[column];
         allocPlusAvail = new int[column];
         completed_process = new int[column];
         unsafe = new int[column];
@@ -37,6 +40,9 @@ public class Algorithm {
         for(r=0;r<row;r++)
             for(c=0;c<column;c++)
                 allocated[r][c] = sc.nextInt();
+
+//        System.out.println("已分配矩阵");
+//        System.out.println(Arrays.toString(allocated[0]));
 
         System.out.println("请输入最大需求矩阵");
         for(r=0;r<row;r++)
@@ -73,6 +79,7 @@ public class Algorithm {
         for(r=0;r<column;r++)
             request[r]=sc.nextInt();
         System.out.println("以下是输出的矩阵");
+
     }
 
 }
