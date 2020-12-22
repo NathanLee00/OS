@@ -14,7 +14,7 @@ public class Algorithm {
     int[] unsafe; //不安全向量
     int[] request;  //需求向量
     int[] work;//工作向量
-    String[] sequence;
+    int[] sequence;
     boolean legal;
 
     int rpm; //指定需求向量为第几个进程
@@ -35,7 +35,7 @@ public class Algorithm {
         max = new int [row][column];
         need = new int[row][column];
         available = new int[column];
-        sequence=new String[column];
+        sequence=new int[column];
         request = new int[column];
         finish = new int[column];
         unsafe = new int[column];
@@ -93,16 +93,20 @@ public class Algorithm {
     }
 
     public void safe_check() {
-        work = available;
+        work = (int [])available.clone();
+
 
         boolean safe = false;
         int tempR = -1, tempC = -1, tempP = -1;
+        int count=-1;
         while (!safe) {
+            boolean allFinish=true;
             for (r = 0; r < row; r++) {
                 for (c = 0; c < column; c++) {
                     if (need[r][c] <= work[c]) {
                         if (c == column - 1&&finish[c]!=1) {
                             tempR = r;
+                            count++;
                         }
                         continue;
                     } else {
@@ -111,21 +115,22 @@ public class Algorithm {
 
                 }
             }
-            if(tempR==-100){
-                safe=false;
+
+            tempP = tempR;
+            if(tempR==-1){
+                System.out.println("无安全序列");
                 return;
             }
-            tempP = tempR;
+            sequence[count]= tempP+1;
             for (c = 0; c < column; c++) {
                 workPlusAllocation[c] = work[c] + allocation[tempR][c];
                 finish[tempP] = 1;
-
             }
             work=workPlusAllocation;
             tempR=-100;
             for(r=0;r<column;r++){
                 if(finish[r]==0){
-                   safe=false;
+                  allFinish=false;
                 }
             }
             for(r=0;r<column;r++){
@@ -135,9 +140,10 @@ public class Algorithm {
             }
             if(safe){
                 System.out.println("安全序列已找到");
+                System.out.println(Arrays.toString(sequence));
                 break;
             }
-//            System.out.println(Arrays.toString(sequence));
+
         }
     }
 }
