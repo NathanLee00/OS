@@ -1,5 +1,3 @@
-
-
 import java.util.Scanner;
 
 public class Algorithm {
@@ -13,11 +11,10 @@ public class Algorithm {
     int[] allocPlusAvail;//相当于work+allocation
     int[] completed_process;  //完成的进程标志向量
     int[] unsafe; //不安全向量
+    int[] request;  //需求矩阵
 
-    int tc,ip;
-    boolean safe; //安不安全的标志
 
-    public void in(){
+    public void run(){
         init();
     }
 
@@ -34,9 +31,6 @@ public class Algorithm {
         completed_process = new int[column];
         unsafe = new int[column];
 
-        tc=column;
-        ip=0;
-        safe=false;
 
         System.out.println("请输入分配矩阵");
         for(r=0;r<row;r++)
@@ -70,5 +64,8 @@ public class Algorithm {
 
     }
 
+    public void banker(){
+
+    }
 
 }
