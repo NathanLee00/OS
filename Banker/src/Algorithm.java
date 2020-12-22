@@ -2,27 +2,41 @@
 
 import java.util.Scanner;
 
-public class DataIn {   //处理数据输入的类
+public class Algorithm {
 
     int row,column,r,c;
 
-    public void In(){
+    int[][] allocated;//分配矩阵
+    int[][] max;//最大需求矩阵
+    int[][] need;//需求矩阵
+    int[] available;//可用资源向量
+    int[] allocPlusAvail;//相当于work+allocation
+    int[] completed_process;  //完成的进程标志向量
+    int[] unsafe; //不安全向量
+
+    int tc,ip;
+    boolean safe; //安不安全的标志
+
+    public void in(){
         init();
     }
 
-    public void init(){
+    public void init(){  //处理数据输入和初始化的方法
         System.out.println("请输入进程数和可用资源数");
         Scanner sc = new Scanner(System.in);    //Java中的输入方法类
         row = sc.nextInt();
         column = sc.nextInt();
-        int[][] allocated = new int[row][column]; //分配矩阵
-        int[][] max = new int [row][column]; //最大需求矩阵
-        int[][] need = new int[row][column]; //需求矩阵
-        int[] available = new int[column];  //可用资源向量
-        int[] allocPlusAvail = new int[column]; //相当于work+allocation
+        allocated = new int[row][column];
+        max = new int [row][column];
+        need = new int[row][column];
+        available = new int[column];
+        allocPlusAvail = new int[column];
+        completed_process = new int[column];
+        unsafe = new int[column];
 
-        int[] completed_process = new int[column];
-        int[] unsafe = new int[column];
+        tc=column;
+        ip=0;
+        safe=false;
 
         System.out.println("请输入分配矩阵");
         for(r=0;r<row;r++)
@@ -55,4 +69,6 @@ public class DataIn {   //处理数据输入的类
 
 
     }
+
+
 }
