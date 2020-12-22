@@ -8,16 +8,22 @@ public class Algorithm {
     int[][] allocation;//分配矩阵
     int[][] max;//最大需求矩阵
     int[][] need;//需求矩阵
+    int[] workPlusAllocation; //工作向量加分配矩阵
     int[] available;//可用资源向量
-    int[] allocPlusAvail;//相当于work+allocation
-    int[] completed_process;  //完成的进程标志向量
+    int[] finish;  //完成的进程标志向量
     int[] unsafe; //不安全向量
     int[] request;  //需求向量
+    int[] work;//工作向量
+    String[] sequence;
+    boolean legal;
+
     int rpm; //指定需求向量为第几个进程
 
     public void run(){
         init();
         banker();
+        if(legal)
+            safe_check();
     }
 
     public void init(){  //处理数据输入和初始化的方法
@@ -29,19 +35,19 @@ public class Algorithm {
         max = new int [row][column];
         need = new int[row][column];
         available = new int[column];
+        sequence=new String[column];
         request = new int[column];
-        allocPlusAvail = new int[column];
-        completed_process = new int[column];
+        finish = new int[column];
         unsafe = new int[column];
-
+        work = new int[column];
+        workPlusAllocation = new int[column];
+        legal=true;
 
         System.out.println("请输入分配矩阵");
         for(r=0;r<row;r++)
             for(c=0;c<column;c++)
                 allocation[r][c] = sc.nextInt();
 
-//        System.out.println("已分配矩阵");
-//        System.out.println(Arrays.toString(allocated[0]));
 
         System.out.println("请输入最大需求矩阵");
         for(r=0;r<row;r++)
@@ -58,14 +64,10 @@ public class Algorithm {
             }
         }   //生成need矩阵
 
-        for(r=0;r<row;r++)
-        {
-            for(c=0;c<column;c++)
-            {
-                allocPlusAvail[r]+= allocation[c][r];
-            }
-            allocPlusAvail[r]+=available[r]; //available=work
-        }//生成work+allocation向量
+        for(c=0;c<column;c++){
+            finish[c]=0;
+        }
+
         System.out.println("请输入要请求资源的进程");
         rpm = sc.nextInt();
         rpm--;
@@ -78,7 +80,8 @@ public class Algorithm {
         for(r=0;r<column;r++){ //请求合法性检查
             if(request[r]>need[rpm][r]||request[r]>available[r]){
                 System.out.println("请求不合法");
-                break;
+                legal=false;
+                return;
             }
         }
         for(r=0;r<column;r++){
@@ -87,9 +90,54 @@ public class Algorithm {
             need[rpm][r]-=request[r];
         }
 
-        System.out.println(Arrays.toString(available));
-        System.out.println(Arrays.toString(allocation[0]));
-        System.out.println(Arrays.toString(need[0]));
     }
 
+    public void safe_check() {
+        work = available;
+
+        boolean safe = false;
+        int tempR = -1, tempC = -1, tempP = -1;
+        while (!safe) {
+            for (r = 0; r < row; r++) {
+                for (c = 0; c < column; c++) {
+                    if (need[r][c] <= work[c]) {
+                        if (c == column - 1&&finish[c]!=1) {
+                            tempR = r;
+                        }
+                        continue;
+                    } else {
+                        break;
+                    }
+
+                }
+            }
+            if(tempR==-100){
+                safe=false;
+                return;
+            }
+            tempP = tempR;
+            for (c = 0; c < column; c++) {
+                workPlusAllocation[c] = work[c] + allocation[tempR][c];
+                finish[tempP] = 1;
+
+            }
+            work=workPlusAllocation;
+            tempR=-100;
+            for(r=0;r<column;r++){
+                if(finish[r]==0){
+                   safe=false;
+                }
+            }
+            for(r=0;r<column;r++){
+                if(finish[r]==1){
+                    safe=true;
+                }
+            }
+            if(safe){
+                System.out.println("安全序列已找到");
+                break;
+            }
+//            System.out.println(Arrays.toString(sequence));
+        }
+    }
 }
